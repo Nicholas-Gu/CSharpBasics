@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -82,12 +83,52 @@ namespace TestBasics
             }
             */
 
-            //这就是向String类中添加了一个静态函数叫WordCount
+            /*//这就是向String类中添加了一个静态函数叫WordCount
             string s = "Hello Extension Methods";
             Console.WriteLine(s.WordCount());
+             */
 
+            //迭代器调用
+            foreach (int number in SomeNumbers())
+            {
+                Console.Write(number.ToString() + " ");
+            }
 
+            Console.WriteLine("\n带泛型的迭代器:");
+            foreach(int number in EventSequeue(5,18))
+            {
+                Console.Write(number.ToString() + " ");
+            }
+
+            Console.WriteLine("\n调用自定义迭代器:");
+            DaysOfTheWeek days = new DaysOfTheWeek();
+            foreach(string day in days)
+            {
+                Console.Write(day + " ");
+            }
+
+            //go to 迭代器 －－ Create a  Zoo class that contains a collection of animals.
+        https://msdn.microsoft.com/zh-cn/library/dscyy5s0(v=vs.120).aspx
             Console.ReadKey();
+        }
+
+        public static System.Collections.IEnumerable SomeNumbers()
+        {
+            yield return 3;
+            yield return 5;
+            yield return 8;
+        }
+
+        public static System.Collections.Generic.IEnumerable<int> EventSequeue
+            (int firstNumber, int lastNumber)
+        {
+            for (int number = firstNumber; number <= lastNumber; number++)
+            { 
+                if(number %2 == 0)
+                {
+                    yield return number;
+                }
+            }
         }
 
         private void CreatePO(string filename)
@@ -181,6 +222,19 @@ namespace TestBasics
         public void Calculate()
         {
             LineTotal = UnitPrice * Quantity;
+        }
+    }
+
+    //the DaysOfTheWeek class implements the IEnumerable interface, which requires a GetEnumerator method. The compiler implicitly calls the GetEnumerator method, which returns an IEnumerator.
+    public class DaysOfTheWeek :IEnumerable
+    {
+        private string[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        public IEnumerator GetEnumerator()
+        { 
+            for(int index =0; index<days.Length; index++)
+            {
+                yield return days[index]; //yield each day od the week
+            }
         }
     }
 }
